@@ -77,6 +77,7 @@ const CheckoutPage = () => {
     { id: 'visa', name: 'Visa', icon: '/visa.png' },
     { id: 'googlepay', name: 'Google Pay', icon: '/googlepay.png' },
     { id: 'yinlianpay', name: 'YinLian Pay', icon: '/yinlianpay.png' },
+    { id: 'airwallex', name: 'Airwallex', icon: '/airwallex.png' },
   ];
 
   // 当购物车内容或支付方式变化时，重置支付状态
@@ -366,6 +367,9 @@ const CheckoutPage = () => {
         case 'yinlianpay':
           await handleYinLianPayment(paymentRequest);
           break;
+        case 'airwallex':
+          await handleAirwallexPayment(paymentRequest);
+          break;
         default:
           alert('Invalid payment method');
       }
@@ -559,6 +563,33 @@ const CheckoutPage = () => {
       }
     } catch (error) {
       console.error('YinLian payment error:', error);
+      alert('Payment failed. Please try again.');
+      paymentInProgress.current = false;
+      setIsProcessing(false);
+    }
+  };
+
+  // 空中云汇支付处理
+  const handleAirwallexPayment = async (paymentRequest: any) => {
+    try {
+      const response = await processPayment(paymentRequest);
+      if (response.success) {
+        // 检查是否有真实的支付网关配置
+        // 如果有redirectUrl且不是订单页面，说明需要跳转到第三方支付页面
+        if (response.redirectUrl && !response.redirectUrl.includes('/order')) {
+          // 有第三方支付重定向URL，跳转到支付页面
+          window.location.href = response.redirectUrl;
+        } else {
+          // Demo模式或支付完成：通过handleOrderSuccess处理订单
+          await handleOrderSuccess('airwallex', response.paymentId || `airwallex_${Date.now()}`);
+        }
+      } else {
+        alert(response.error || 'Payment failed');
+        paymentInProgress.current = false;
+        setIsProcessing(false);
+      }
+    } catch (error) {
+      console.error('Airwallex payment error:', error);
       alert('Payment failed. Please try again.');
       paymentInProgress.current = false;
       setIsProcessing(false);

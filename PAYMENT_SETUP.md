@@ -6,6 +6,7 @@
 - Google Pay
 - Visa (通过Stripe)
 - 银联支付 (YinLian Pay)
+- 空中云汇 (Airwallex)
 
 ## 配置步骤
 
@@ -46,7 +47,30 @@ cp .env.example .env.local
    YINLIAN_SECRET_KEY=your_secret_key
    ```
 
-### 5. Apple Pay配置
+### 5. 空中云汇 (Airwallex) 配置
+
+1. **注册并登录空中云汇账户**
+   - 访问 [Airwallex 官网](https://www.airwallex.com/) 注册账户
+   - 完成企业认证和账户验证
+
+2. **获取 API 密钥和客户端 ID**
+   - 登录 Airwallex 商户后台
+   - 导航至"开发者中心"或"API Keys"页面
+   - 在"API Keys"页面可以看到 API 密钥和客户端 ID
+   - 如果尚未生成，按照页面提示创建新的 API 密钥和客户端 ID
+
+3. **在 `.env.local` 中配置**：
+   ```
+   AIRWALLEX_API_KEY=your_airwallex_api_key
+   AIRWALLEX_CLIENT_ID=your_airwallex_client_id
+   ```
+
+**注意事项**：
+- API 密钥和客户端 ID 是访问空中云汇 API 的重要凭证，请妥善保管，避免泄露
+- 建议先在沙盒环境中测试
+- 参考 [Airwallex API 文档](https://www.airwallex.com/docs/api) 获取详细的 API 接口说明
+
+### 6. Apple Pay配置
 
 Apple Pay需要：
 - HTTPS环境
@@ -70,7 +94,7 @@ APPLE_PAY_KEY_PATH=/path/to/apple_pay_key.pem
 
 **注意**：开发环境可以不配置证书和密钥路径，系统会使用模拟验证。
 
-### 6. Google Pay配置
+### 7. Google Pay配置
 
 Google Pay需要：
 - 在Google Pay Console中注册商户
@@ -115,6 +139,10 @@ STRIPE_SECRET_KEY=sk_test_...
 # YinLian Pay Configuration
 YINLIAN_MERCHANT_ID=your_yinlian_merchant_id
 YINLIAN_SECRET_KEY=your_yinlian_secret_key
+
+# Airwallex Configuration
+AIRWALLEX_API_KEY=your_airwallex_api_key
+AIRWALLEX_CLIENT_ID=your_airwallex_client_id
 
 # Apple Pay Configuration
 APPLE_PAY_MERCHANT_ID=merchant.com.yourdomain.gamelab
@@ -166,7 +194,7 @@ ORDER_NOTIFICATION_EMAIL=1131811130@qq.com
 请求格式：
 ```json
 {
-  "paymentMethod": "paypal|applepay|googlepay|visa|yinlianpay",
+  "paymentMethod": "paypal|applepay|googlepay|visa|yinlianpay|airwallex",
   "amount": 100.00,
   "currency": "GBP",
   "orderData": {

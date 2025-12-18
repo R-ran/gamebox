@@ -78,7 +78,7 @@ const Footer = () => {
     { name: 'Visa', src: '/visa.png' },
     { name: 'YinLian', src: '/yinlianpay.png' },
     { name: 'PayPal', src: '/paypal.png' },
-   
+    { name: 'Airwallex', src: '/airwallex.png' },
   ];
 
   return (
