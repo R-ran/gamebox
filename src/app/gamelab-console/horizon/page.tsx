@@ -1394,12 +1394,15 @@ const HorizonPage = () => {
                     setSelectedReviewIndex((i - 1) % reviews.length);
                     setShowReviewModal(true);
                   }}
-                  className="flex-shrink-0 w-24 h-24 bg-gray-900 rounded-lg border border-gray-700 flex items-center justify-center hover:border-purple-500 transition cursor-pointer"
+                  className="relative flex-shrink-0 w-24 h-24 bg-gray-900 rounded-lg border border-gray-700 overflow-hidden hover:border-purple-500 transition cursor-pointer"
                 >
-                  <div className="text-gray-500 text-xs text-center">
-                    <p>照片</p>
-                    <p>{i}</p>
-                  </div>
+                  <Image
+                    src={`/customer${i}.avif`}
+                    alt={`Customer photo ${i}`}
+                    fill
+                    className="object-cover"
+                    sizes="96px"
+                  />
                 </button>
               ))}
             </div>
@@ -1520,11 +1523,14 @@ const HorizonPage = () => {
               
               {/* 主图 - 自适应高度，留出空间给缩略图 */}
               <div className="flex-1 min-h-0 mb-4 flex items-center">
-                <div className="w-full h-full max-h-[calc(100vh-200px)] bg-gray-800 rounded-lg flex items-center justify-center border border-gray-700 overflow-hidden">
-                  <div className="text-gray-500 text-center">
-                    <p className="text-lg mb-2">评价图片 {selectedReviewIndex + 1}</p>
-                    <p className="text-sm">{reviews[selectedReviewIndex]?.name || 'Unknown'}</p>
-                  </div>
+                <div className="relative w-full h-full max-h-[calc(100vh-200px)] overflow-hidden">
+                  <Image
+                    src={`/customer${(selectedReviewIndex % 8) + 1}.avif`}
+                    alt={`Customer photo ${(selectedReviewIndex % 8) + 1}`}
+                    fill
+                    className="object-contain"
+                    sizes="(min-width: 1024px) 66vw, 100vw"
+                  />
                 </div>
               </div>
 
@@ -1536,15 +1542,19 @@ const HorizonPage = () => {
                     <button
                       key={i}
                       onClick={() => setSelectedReviewIndex(reviewIndex)}
-                      className={`flex-shrink-0 w-20 h-20 bg-gray-800 rounded-lg border-2 flex items-center justify-center transition ${
+                      className={`relative flex-shrink-0 w-20 h-20 rounded-lg border-2 overflow-hidden transition ${
                         selectedReviewIndex === reviewIndex
-                          ? 'border-purple-500 bg-purple-500/20'
+                          ? 'border-purple-500'
                           : 'border-gray-700 hover:border-gray-600'
                       }`}
                     >
-                      <div className="text-gray-500 text-sm font-semibold">
-                        {i}
-                      </div>
+                      <Image
+                        src={`/customer${i}.avif`}
+                        alt={`Customer photo ${i}`}
+                        fill
+                        className="object-cover"
+                        sizes="80px"
+                      />
                     </button>
                   );
                 })}
