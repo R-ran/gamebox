@@ -19,6 +19,7 @@ export interface PaymentResponse {
   message?: string;
   redirectUrl?: string;
   error?: string;
+  demoMode?: boolean; // 标识是否为demo模式
 }
 
 // 处理支付请求

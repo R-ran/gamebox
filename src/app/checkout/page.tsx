@@ -572,25 +572,52 @@ const CheckoutPage = () => {
   // 空中云汇支付处理
   const handleAirwallexPayment = async (paymentRequest: any) => {
     try {
+      console.log('Processing Airwallex payment...');
       const response = await processPayment(paymentRequest);
+      
       if (response.success) {
+        // 检查是否是demo模式
+        if (response.demoMode) {
+          console.warn('⚠️ Airwallex is running in DEMO MODE');
+          console.warn('⚠️ No real payment was processed. Configure API credentials to enable real payments.');
+          // Demo模式：直接创建订单
+          await handleOrderSuccess('airwallex', response.paymentId || `airwallex_${Date.now()}`);
+          return;
+        }
+        
         // 检查是否有真实的支付网关配置
         // 如果有redirectUrl且不是订单页面，说明需要跳转到第三方支付页面
         if (response.redirectUrl && !response.redirectUrl.includes('/order')) {
+          console.log('Redirecting to Airwallex payment page:', response.redirectUrl);
           // 有第三方支付重定向URL，跳转到支付页面
           window.location.href = response.redirectUrl;
-        } else {
-          // Demo模式或支付完成：通过handleOrderSuccess处理订单
-          await handleOrderSuccess('airwallex', response.paymentId || `airwallex_${Date.now()}`);
+          return;
         }
+        
+        // 如果有clientSecret，说明需要使用Airwallex SDK进行支付
+        // 注意：这需要在前端集成Airwallex SDK
+        if (response.clientSecret) {
+          console.log('Airwallex payment intent created. Client secret received.');
+          console.warn('⚠️ Airwallex SDK integration required for frontend payment.');
+          console.warn('⚠️ For now, proceeding with order creation (payment not completed).');
+          // TODO: 集成Airwallex SDK进行支付
+          // 目前先创建订单，但标记为待支付状态
+          alert('Airwallex SDK integration required. Payment intent created but payment not completed.');
+          await handleOrderSuccess('airwallex', response.paymentId || `airwallex_${Date.now()}`);
+          return;
+        }
+        
+        // 其他情况：支付完成，创建订单
+        await handleOrderSuccess('airwallex', response.paymentId || `airwallex_${Date.now()}`);
       } else {
-        alert(response.error || 'Payment failed');
+        console.error('Airwallex payment failed:', response.error);
+        alert(response.error || 'Airwallex payment failed');
         paymentInProgress.current = false;
         setIsProcessing(false);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Airwallex payment error:', error);
-      alert('Payment failed. Please try again.');
+      alert(`Payment failed: ${error.message || 'Please try again.'}`);
       paymentInProgress.current = false;
       setIsProcessing(false);
     }

@@ -277,47 +277,108 @@ async function handleAirwallexPayment(amount: number, currency: string, orderDat
     const airwallexApiKey = process.env.AIRWALLEX_API_KEY;
     const airwallexClientId = process.env.AIRWALLEX_CLIENT_ID;
     
+    console.log('=== Airwallex Payment Processing ===');
+    console.log('- Amount:', amount);
+    console.log('- Currency:', currency);
+    console.log('- API Key configured:', !!airwallexApiKey);
+    console.log('- Client ID configured:', !!airwallexClientId);
+    
     if (!airwallexApiKey || !airwallexClientId) {
-      // 开发环境：返回模拟成功（不返回redirectUrl，让前端处理）
+      // Demo模式：返回模拟成功
+      console.warn('⚠️ Airwallex API credentials not configured. Running in DEMO MODE.');
+      console.warn('⚠️ To enable real payment, configure AIRWALLEX_API_KEY and AIRWALLEX_CLIENT_ID in .env.local');
       return NextResponse.json({
         success: true,
-        paymentId: `airwallex_${Date.now()}`,
-        message: 'Airwallex payment processed successfully (demo mode)',
-        // 不返回redirectUrl，让前端通过handleOrderSuccess处理
+        paymentId: `airwallex_demo_${Date.now()}`,
+        message: 'Airwallex payment processed successfully (DEMO MODE - no real payment)',
+        demoMode: true,
       });
     }
 
-    // 空中云汇API调用
-    // 这里需要根据空中云汇的实际API文档进行集成
-    // 如果空中云汇API返回了支付页面URL，应该在这里返回
-    // 例如：redirectUrl: airwallexPaymentUrl
+    // 真实API模式：调用空中云汇API创建支付意图
+    console.log('✅ Airwallex API credentials found. Processing real payment...');
     
-    // 示例：创建支付意图
-    // const response = await fetch('https://api.airwallex.com/api/v1/pa/payment_intents/create', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Authorization': `Bearer ${airwallexApiKey}`,
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({
-    //     amount: amount.toFixed(2),
-    //     currency: currency,
-    //     merchant_order_id: `order_${Date.now()}`,
-    //   }),
-    // });
-    
-    return NextResponse.json({
-      success: true,
-      paymentId: `airwallex_${Date.now()}`,
-      message: 'Airwallex payment processed successfully',
-      // 只有在有真实的第三方支付页面URL时才返回redirectUrl
-      // redirectUrl: airwallexPaymentUrl
-    });
-  } catch (error) {
-    console.error('Airwallex payment error:', error);
+    try {
+      // 注意：空中云汇的API端点可能因环境而异（沙盒/生产）
+      // 这里使用沙盒环境，生产环境需要修改为 https://api.airwallex.com
+      const apiBaseUrl = process.env.AIRWALLEX_API_URL || 'https://api.airwallex.com';
+      
+      // 创建支付意图
+      const merchantOrderId = `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      const paymentIntentPayload = {
+        amount: amount.toFixed(2),
+        currency: currency.toUpperCase(),
+        merchant_order_id: merchantOrderId,
+        request_id: `req_${Date.now()}`,
+        customer: {
+          email: orderData.customer?.email || '',
+          first_name: orderData.customer?.firstName || '',
+          last_name: orderData.customer?.lastName || '',
+        },
+        return_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/order?status=success&payment=airwallex`,
+      };
+
+      console.log('Creating Airwallex payment intent...');
+      console.log('- API URL:', `${apiBaseUrl}/api/v1/pa/payment_intents/create`);
+      console.log('- Merchant Order ID:', merchantOrderId);
+
+      const apiResponse = await fetch(`${apiBaseUrl}/api/v1/pa/payment_intents/create`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${airwallexApiKey}`,
+          'Content-Type': 'application/json',
+          'x-client-id': airwallexClientId,
+        },
+        body: JSON.stringify(paymentIntentPayload),
+      });
+
+      const apiResult = await apiResponse.json();
+      
+      if (!apiResponse.ok) {
+        console.error('❌ Airwallex API error:', apiResult);
+        throw new Error(apiResult.message || 'Failed to create payment intent');
+      }
+
+      console.log('✅ Airwallex payment intent created successfully');
+      console.log('- Payment Intent ID:', apiResult.id);
+      
+      // 如果API返回了支付页面URL，返回给前端进行跳转
+      // 或者返回支付意图ID，让前端使用Airwallex SDK进行支付
+      if (apiResult.next_action?.redirect_url) {
+        return NextResponse.json({
+          success: true,
+          paymentId: apiResult.id,
+          redirectUrl: apiResult.next_action.redirect_url,
+          message: 'Redirect to Airwallex payment page',
+        });
+      }
+      
+      // 如果使用前端SDK，返回支付意图ID和客户端密钥
+      return NextResponse.json({
+        success: true,
+        paymentId: apiResult.id,
+        clientSecret: apiResult.client_secret, // 用于前端SDK
+        message: 'Payment intent created. Use Airwallex SDK to complete payment.',
+      });
+      
+    } catch (apiError: any) {
+      console.error('❌ Airwallex API call failed:', apiError);
+      console.error('- Error message:', apiError.message);
+      console.error('- Error details:', apiError);
+      
+      // API调用失败，返回错误
+      return NextResponse.json({
+        success: false,
+        error: `Airwallex API error: ${apiError.message || 'Unknown error'}`,
+        demoMode: false,
+      }, { status: 500 });
+    }
+  } catch (error: any) {
+    console.error('❌ Airwallex payment error:', error);
     return NextResponse.json({
       success: false,
-      error: 'Airwallex payment failed',
+      error: `Airwallex payment failed: ${error.message || 'Unknown error'}`,
     }, { status: 500 });
   }
 }

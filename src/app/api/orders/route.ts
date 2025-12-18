@@ -42,7 +42,14 @@ export async function POST(request: NextRequest) {
     // 例如：await saveOrderToDatabase(order);
 
     // 发送订单确认邮件（异步，不阻塞响应）
-    console.log('Attempting to send order confirmation email for order:', order.orderNumber);
+    console.log('=== Order Creation ===');
+    console.log('Order Number:', order.orderNumber);
+    console.log('Payment Method:', order.paymentMethod);
+    console.log('Payment ID:', order.paymentId);
+    console.log('Customer Email:', order.customer.email);
+    console.log('Total Amount: £' + order.total.toFixed(2));
+    console.log('Attempting to send order confirmation email...');
+    
     sendOrderConfirmationEmail({
       orderNumber: order.orderNumber,
       customer: order.customer,
@@ -55,14 +62,26 @@ export async function POST(request: NextRequest) {
     })
       .then((success) => {
         if (success) {
-          console.log('Order confirmation email sent successfully for order:', order.orderNumber);
+          console.log('✅ Order confirmation email sent successfully!');
+          console.log('- Order Number:', order.orderNumber);
+          console.log('- Payment Method:', order.paymentMethod);
+          console.log('- Customer Email:', order.customer.email);
         } else {
-          console.warn('Order confirmation email failed to send for order:', order.orderNumber);
+          console.warn('❌ Order confirmation email failed to send');
+          console.warn('- Order Number:', order.orderNumber);
+          console.warn('- Payment Method:', order.paymentMethod);
+          console.warn('- Customer Email:', order.customer.email);
+          console.warn('Please check email configuration in .env.local');
         }
       })
       .catch((error) => {
         // 邮件发送失败不影响订单创建
-        console.error('Error sending order confirmation email:', error);
+        console.error('❌ Error sending order confirmation email:');
+        console.error('- Order Number:', order.orderNumber);
+        console.error('- Payment Method:', order.paymentMethod);
+        console.error('- Error message:', error.message);
+        console.error('- Error code:', error.code);
+        console.error('- Full error:', error);
       });
 
     return NextResponse.json({

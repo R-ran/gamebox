@@ -61,7 +61,7 @@ const HeadphonesPage = () => {
 
   const handleStickyAddToCart = () => {
     addItem({
-      id: `headphones-${Date.now()}`,
+      id: 'gamelab-retro-headphones',
       name: 'Gamelab Retro Headphones',
       price: singlePriceInfo.price,
       image: images[activeIdx],
@@ -257,9 +257,11 @@ const HeadphonesPage = () => {
             <button
               onClick={() => {
                 const priceInfo = getPrice(selectedQuantity);
+                const itemId = 'gamelab-retro-headphones';
+                // 添加指定数量的商品
                 for (let i = 0; i < selectedQuantity; i++) {
                   addItem({
-                    id: `headphones-${Date.now()}-${i}`,
+                    id: itemId,
                     name: 'Gamelab Retro Headphones',
                     price: priceInfo.price / selectedQuantity,
                     image: images[activeIdx],

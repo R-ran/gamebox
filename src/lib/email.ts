@@ -387,11 +387,18 @@ Total: £${data.total.toFixed(2)}
       `,
     };
 
+    console.log('📧 Sending order confirmation email...');
+    console.log('- Payment Method:', data.paymentMethod.toUpperCase());
+    console.log('- Order Number:', data.orderNumber);
+    console.log('- Customer Email:', data.customer.email);
+    console.log('- Recipient Email:', recipientEmail);
+    
     const info = await transporter.sendMail(mailOptions);
-    console.log('Order confirmation email sent successfully!');
+    console.log('✅ Order confirmation email sent successfully!');
     console.log('- Message ID:', info.messageId);
     console.log('- To:', recipientEmail);
     console.log('- Subject:', mailOptions.subject);
+    console.log('- Payment Method:', data.paymentMethod.toUpperCase());
     return true;
   } catch (error: any) {
     console.error('Error sending order confirmation email:');

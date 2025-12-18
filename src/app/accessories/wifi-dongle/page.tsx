@@ -21,7 +21,7 @@ const WifiDonglePage = () => {
 
   const handleStickyAddToCart = () => {
     addItem({
-      id: `wifi-dongle-${Date.now()}`,
+      id: 'wifi-dongle-pack',
       name: 'Wifi Dongle Pack',
       price: price,
       image: images[activeIdx],
@@ -120,8 +120,9 @@ const WifiDonglePage = () => {
               </div>
               <button 
                 onClick={() => {
+                  const itemId = 'wifi-dongle-pack';
                   addItem({
-                    id: `wifi-dongle-${Date.now()}`,
+                    id: itemId,
                     name: 'Wifi Dongle Pack',
                     price: price,
                     image: images[activeIdx],

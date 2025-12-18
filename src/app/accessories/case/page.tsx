@@ -229,7 +229,7 @@ const CasePage = () => {
 
   const handleStickyAddToCart = () => {
     addItem({
-      id: `case-${Date.now()}`,
+      id: 'gamelab-protective-case',
       name: 'GameLab Protective Case',
       price: unitPrice,
       image: images[activeIdx],
@@ -332,9 +332,11 @@ const CasePage = () => {
             {/* 加入购物车 */}
             <button
               onClick={() => {
+                const itemId = 'gamelab-protective-case';
+                // 添加指定数量的商品
                 for (let i = 0; i < qty; i++) {
                   addItem({
-                    id: `case-${Date.now()}-${i}`,
+                    id: itemId,
                     name: 'GameLab Protective Case',
                     price: unitPrice,
                     image: images[activeIdx],
