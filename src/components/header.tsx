@@ -1,12 +1,14 @@
 'use client';
 
-import { FaShoppingCart, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaShoppingCart, FaChevronDown, FaChevronUp, FaBars, FaTimes } from 'react-icons/fa';
 import Link from 'next/link';
 import { useState, useEffect, useRef } from 'react';
 import { useCart } from '../contexts/CartContext';
 
 const Header = () => {
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileDropdown, setMobileDropdown] = useState<string | null>(null);
   const { openCart, getItemCount } = useCart();
   
   // 下拉菜单配置
@@ -61,6 +63,47 @@ const Header = () => {
   const toggleDropdown = (menu: string) => {
     setOpenDropdown(openDropdown === menu ? null : menu);
   };
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+    if (!mobileMenuOpen) {
+      setMobileDropdown(null);
+    }
+  };
+
+  const toggleMobileDropdown = (menu: string) => {
+    setMobileDropdown(mobileDropdown === menu ? null : menu);
+  };
+
+  // 关闭手机端菜单当点击外部区域
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setMobileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
+
+  // 当手机端菜单打开时，禁用body滚动
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [mobileMenuOpen]);
   return (
     <header className="bg-black text-white">
       {/* 顶部促销横幅 */}
@@ -83,19 +126,28 @@ const Header = () => {
   <div className="container mx-auto px-4 py-4 space-y-4">
   {/* 第一行：仅 Logo，居中 */}
   <div className="flex justify-center">
-    <Link href="/" className="text-6xl font-bold tracking-wide py-6">
+    <Link href="/" className="text-4xl md:text-6xl font-bold tracking-wide py-4 md:py-6">
       GAMELAB
     </Link>
   </div>
 
-  {/* 第二行：菜单（居中） + 购物车（最右） */}
-  <div className="flex flex-col" ref={navRef}>
-    <div className="flex items-center">
-      {/* 占位，让菜单真正居中 */}
-      <div className="flex-1" />
+      {/* 第二行：菜单（居中） + 购物车（最右） */}
+      <div className="flex flex-col" ref={navRef}>
+        <div className="flex items-center">
+          {/* 手机端汉堡菜单按钮 */}
+          <button
+            onClick={toggleMobileMenu}
+            className="md:hidden text-2xl hover:text-pink-400 transition mr-4"
+            aria-label="Toggle mobile menu"
+          >
+            {mobileMenuOpen ? <FaTimes /> : <FaBars />}
+          </button>
 
-      {/* 导航菜单 – 水平居中 */}
-      <nav className="hidden md:flex items-center space-x-6">
+          {/* 占位，让菜单真正居中 */}
+          <div className="flex-1" />
+
+          {/* 导航菜单 – 水平居中（桌面端） */}
+          <nav className="hidden md:flex items-center space-x-6">
         <Link href="/" className="hover:text-pink-400 transition">Home</Link>
 
         {/* Gamelab Console 下拉菜单 */}
@@ -195,6 +247,166 @@ const Header = () => {
     )}
   </div>
 </div>
+
+      {/* 手机端侧边栏菜单 */}
+      {mobileMenuOpen && (
+        <>
+          {/* 遮罩层 */}
+          <div
+            className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+            onClick={toggleMobileMenu}
+          />
+          {/* 侧边栏 */}
+          <div
+            ref={mobileMenuRef}
+            className="fixed top-0 left-0 h-full w-72 max-w-[85vw] bg-black text-white z-50 overflow-y-auto md:hidden transform transition-transform duration-300 ease-in-out shadow-2xl"
+          >
+            <div className="p-6">
+              {/* 关闭按钮 */}
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">Menu</h2>
+                <button
+                  onClick={toggleMobileMenu}
+                  className="text-2xl hover:text-pink-400 transition"
+                  aria-label="Close menu"
+                >
+                  <FaTimes />
+                </button>
+              </div>
+
+              {/* 导航链接 */}
+              <nav className="flex flex-col space-y-4">
+                <Link
+                  href="/"
+                  className="py-2 hover:text-pink-400 transition border-b border-gray-800"
+                  onClick={toggleMobileMenu}
+                >
+                  Home
+                </Link>
+
+                {/* Gamelab Console 下拉菜单 */}
+                <div>
+                  <button
+                    onClick={() => toggleMobileDropdown('console')}
+                    className="w-full flex items-center justify-between py-2 hover:text-pink-400 transition border-b border-gray-800"
+                  >
+                    <span>Gamelab Console</span>
+                    {mobileDropdown === 'console' ? (
+                      <FaChevronUp className="text-xs" />
+                    ) : (
+                      <FaChevronDown className="text-xs" />
+                    )}
+                  </button>
+                  {mobileDropdown === 'console' && (
+                    <div className="pl-4 mt-2 space-y-2">
+                      {dropdownMenus.console.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="block py-2 hover:text-pink-400 transition"
+                          onClick={toggleMobileMenu}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Accessories 下拉菜单 */}
+                <div>
+                  <button
+                    onClick={() => toggleMobileDropdown('accessories')}
+                    className="w-full flex items-center justify-between py-2 hover:text-pink-400 transition border-b border-gray-800"
+                  >
+                    <span>Accessories</span>
+                    {mobileDropdown === 'accessories' ? (
+                      <FaChevronUp className="text-xs" />
+                    ) : (
+                      <FaChevronDown className="text-xs" />
+                    )}
+                  </button>
+                  {mobileDropdown === 'accessories' && (
+                    <div className="pl-4 mt-2 space-y-2">
+                      {dropdownMenus.accessories.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="block py-2 hover:text-pink-400 transition"
+                          onClick={toggleMobileMenu}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <Link
+                  href="/faqs"
+                  className="py-2 hover:text-pink-400 transition border-b border-gray-800"
+                  onClick={toggleMobileMenu}
+                >
+                  FAQs
+                </Link>
+
+                {/* Resources 下拉菜单 */}
+                <div>
+                  <button
+                    onClick={() => toggleMobileDropdown('resources')}
+                    className="w-full flex items-center justify-between py-2 hover:text-pink-400 transition border-b border-gray-800"
+                  >
+                    <span>Resources</span>
+                    {mobileDropdown === 'resources' ? (
+                      <FaChevronUp className="text-xs" />
+                    ) : (
+                      <FaChevronDown className="text-xs" />
+                    )}
+                  </button>
+                  {mobileDropdown === 'resources' && (
+                    <div className="pl-4 mt-2 space-y-2">
+                      {dropdownMenus.resources.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="block py-2 hover:text-pink-400 transition"
+                          onClick={toggleMobileMenu}
+                        >
+                          {item.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <Link
+                  href="/about"
+                  className="py-2 hover:text-pink-400 transition border-b border-gray-800"
+                  onClick={toggleMobileMenu}
+                >
+                  About Us
+                </Link>
+
+                <Link
+                  href="/contact"
+                  className="py-2 hover:text-pink-400 transition border-b border-gray-800"
+                  onClick={toggleMobileMenu}
+                >
+                  Contact
+                </Link>
+
+                <Link
+                  href="/order"
+                  className="py-2 hover:text-pink-400 transition border-b border-gray-800"
+                  onClick={toggleMobileMenu}
+                >
+                  Track Your Order
+                </Link>
+              </nav>
+            </div>
+          </div>
+        </>
+      )}
     </header>
   );
 };
