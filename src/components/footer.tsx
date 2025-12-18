@@ -82,7 +82,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-neutral-900 text-neutral-200">
+    <footer className="bg-neutral-900 text-neutral-200" style={{ marginBottom: '100px' }}>
       {/* Logo */}
       <div className="text-center mb-4 py-6">
       <Link href="/" className="inline-block">

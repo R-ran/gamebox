@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import Header from '../../../components/header';
 import Footer from '../../../components/footer';
+import StickyProductBar from '../../../components/sticky-product-bar';
 import { useCart } from '../../../contexts/CartContext';
 
 const WifiDonglePage = () => {
@@ -16,10 +17,28 @@ const WifiDonglePage = () => {
   const images = ['/wifi-dongle.avif', '/wifi-dongle-2.avif'];
   const [activeIdx, setActiveIdx] = useState(0);
 
+  const discountPercent = Math.round(((original - price) / original) * 100);
+
+  const handleStickyAddToCart = () => {
+    addItem({
+      id: `wifi-dongle-${Date.now()}`,
+      name: 'Wifi Dongle Pack',
+      price: price,
+      image: images[activeIdx],
+    });
+  };
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Header />
-      <main style={{ paddingBottom: '10px' }}>
+      <StickyProductBar
+        productName="Multiplayer Kitx2"
+        price={price}
+        originalPrice={original}
+        discountPercent={discountPercent}
+        onAddToCart={handleStickyAddToCart}
+      />
+      <main style={{ paddingBottom: '150px' }}>
         <section className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 gap-12">
             {/* 左侧：产品图片 */}

@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import Header from '../../../components/header';
 import Footer from '../../../components/footer';
+import StickyProductBar from '../../../components/sticky-product-bar';
 import { FaStar, FaChevronUp, FaChevronDown, FaDesktop, FaBatteryFull, FaSave, FaCog, FaMicrochip, FaMemory } from 'react-icons/fa';
 import { useCart } from '../../../contexts/CartContext';
 
@@ -224,11 +225,28 @@ const CasePage = () => {
     }));
   };
 
+  const discountPercent = Math.round(((original - unitPrice) / original) * 100);
+
+  const handleStickyAddToCart = () => {
+    addItem({
+      id: `case-${Date.now()}`,
+      name: 'GameLab Protective Case',
+      price: unitPrice,
+      image: images[activeIdx],
+    });
+  };
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Header />
-
-      <main className="container mx-auto px-4 py-12">
+      <StickyProductBar
+        productName="Protective Case"
+        price={unitPrice}
+        originalPrice={original}
+        discountPercent={discountPercent}
+        onAddToCart={handleStickyAddToCart}
+      />
+      <main className="container mx-auto px-4 py-12" style={{ paddingBottom: '150px' }}>
         <div className="grid md:grid-cols-2 gap-12">
           {/* ---------- 左侧图片 ---------- */}
           <div className="md:sticky md:top-24 self-start">

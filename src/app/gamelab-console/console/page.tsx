@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
 import Header from '../../../components/header';
 import Footer from '../../../components/footer';
+import StickyProductBar from '../../../components/sticky-product-bar';
 import { useCart } from '../../../contexts/CartContext';
 import { 
   FaFire, 
@@ -371,10 +372,42 @@ const ConsolePage = () => {
     }));
   };
 
+  const currentColor = selectedColors[0] || 'White Strike';
+
+  // 处理粘性栏的颜色变更
+  const handleStickyColorChange = (color: string) => {
+    setSelectedColors(prev => ({ ...prev, 0: color }));
+    const imageIndex = colorImageMap[color] || 0;
+    setSelectedImageIndex(imageIndex);
+  };
+
+  // 处理粘性栏的添加到购物车（只添加单个产品）
+  const handleStickyAddToCart = () => {
+    const color = selectedColors[0] || 'White Strike';
+    const imageIndex = colorImageMap[color] || 0;
+    addItem({
+      id: `console-${color}-${Date.now()}`,
+      name: `All-In-One Retro Gaming Console (${color})`,
+      price: getPrice(1).price,
+      image: productImages[imageIndex].src,
+      productType: 'console',
+    });
+  };
+
   return (
     <div className="min-h-screen bg-black text-white">
       <Header />
-      <main style={{ paddingBottom: '10px' }}>
+      <StickyProductBar
+        productName="All-In-One Retro Gaming Console"
+        price={getPrice(1).price}
+        originalPrice={getPrice(1).original}
+        discountPercent={Math.round(((getPrice(1).original - getPrice(1).price) / getPrice(1).original) * 100)}
+        selectedColor={currentColor}
+        colors={colors}
+        onColorChange={handleStickyColorChange}
+        onAddToCart={handleStickyAddToCart}
+      />
+      <main style={{ paddingBottom: '150px' }}>
         {/* 产品主区域 */}
         <section className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 gap-12">
