@@ -77,7 +77,7 @@ const CheckoutPage = () => {
     { id: 'visa', name: 'Visa', icon: '/visa.png' },
     { id: 'googlepay', name: 'Google Pay', icon: '/googlepay.png' },
     { id: 'yinlianpay', name: 'YinLian Pay', icon: '/yinlianpay.png' },
-    { id: 'airwallex', name: 'Airwallex', icon: '/airwallex.png' },
+    { id: 'airwallex', name: 'Airwallex', icon: '/airwallex.avif' },
   ];
 
   // 当购物车内容或支付方式变化时，重置支付状态
