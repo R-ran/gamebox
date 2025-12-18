@@ -1182,39 +1182,6 @@ const ConsolePage = () => {
           {/* Built Like the Games That Made You - 左右布局 */}
           <div className="grid md:grid-cols-2 gap-12 items-start max-w-6xl mx-auto mb-12">
             
-
-            {/* 右侧：标题、文字和发光图形 */}
-            <div className="relative pr-8">
-              {/* 右上角发光设备轮廓占位符 */}
-              <div className="absolute top-0 right-0 w-40 h-40 -mr-4 -mt-4">
-                <div className="relative w-full h-full">
-                  {/* 外层橙色光晕 */}
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-orange-500/40 to-transparent rounded-tl-full blur-2xl"></div>
-                  {/* 内层粉色/紫色光晕 */}
-                  <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-br from-pink-500/60 via-purple-500/60 to-transparent rounded-tl-full blur-xl"></div>
-                  {/* 设备轮廓线条 */}
-                  <div className="absolute top-0 right-0 w-24 h-24">
-                    <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                      <path
-                        d="M 0 0 L 100 0 L 100 40 Q 100 50 90 60 L 60 90 Q 50 100 40 100 L 0 100 Z"
-                        fill="none"
-                        stroke="url(#glow-gradient)"
-                        strokeWidth="2"
-                        className="drop-shadow-lg"
-                      />
-                      <defs>
-                        <linearGradient id="glow-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                          <stop offset="0%" stopColor="#ec4899" stopOpacity="0.8" />
-                          <stop offset="100%" stopColor="#a855f7" stopOpacity="0.6" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              
-            </div>
           </div>
 
         {/* 游戏机三视图主图 - 居中显示，使用实际图片，不要背景框且不占满整屏 */}
