@@ -4,7 +4,11 @@ import { FaArrowUp } from 'react-icons/fa';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-const Footer = () => {
+interface FooterProps {
+  hasStickyBar?: boolean;
+}
+
+const Footer = ({ hasStickyBar = false }: FooterProps) => {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -82,7 +86,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-neutral-900 text-neutral-200" style={{ marginBottom: '100px' }}>
+    <footer className="bg-neutral-900 text-neutral-200">
       {/* Logo */}
       <div className="text-center mb-4 py-6">
       <Link href="/" className="inline-block">
@@ -158,7 +162,7 @@ const Footer = () => {
       </div>
 
       {/* Payment icons + copyright */}
-<div className="bg-white">
+<div className={`bg-white ${hasStickyBar ? 'pb-24' : ''}`}>
   <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col items-center gap-4">
     {/* 图标行 */}
     <div className="flex flex-wrap justify-center items-center gap-3">

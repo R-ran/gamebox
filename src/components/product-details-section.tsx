@@ -1,7 +1,13 @@
+'use client';
+
 import Link from 'next/link';
+import { useState } from 'react';
 import { FaGamepad, FaBatteryFull, FaTruck, FaTag } from 'react-icons/fa';
+import { useCart } from '../contexts/CartContext';
 
 const ProductDetailsSection = () => {
+  const { addItem } = useCart();
+  const [showAddToCartSuccess, setShowAddToCartSuccess] = useState(false);
   return (
     <section className="bg-black text-white py-20">
       <div className="container mx-auto px-4">
@@ -38,9 +44,31 @@ const ProductDetailsSection = () => {
             </ul>
 
             {/* 添加到购物车按钮 */}
-            <button className="w-full md:w-auto bg-pink-500 hover:bg-pink-600 text-white font-bold py-4 px-12 rounded-lg transition transform hover:scale-105 shadow-lg shadow-pink-500/50 mb-4">
-              ADD TO CART
-            </button>
+            <div className="mb-4">
+              <button 
+                onClick={() => {
+                  addItem({
+                    id: 'console-blue',
+                    name: 'All-In-One Gamelab Console',
+                    price: 39.99,
+                    image: '/console-blue.avif',
+                    productType: 'console',
+                  });
+                  setShowAddToCartSuccess(true);
+                  setTimeout(() => {
+                    setShowAddToCartSuccess(false);
+                  }, 3000);
+                }}
+                className="w-full md:w-auto bg-pink-500 hover:bg-pink-600 text-white font-bold py-4 px-12 rounded-lg transition transform hover:scale-105 shadow-lg shadow-pink-500/50"
+              >
+                ADD TO CART
+              </button>
+              {showAddToCartSuccess && (
+                <p className="text-green-400 text-sm mt-2 animate-fade-in">
+                  Added to cart successfully!
+                </p>
+              )}
+            </div>
             
             <Link
               href="/gamelab-console/console"

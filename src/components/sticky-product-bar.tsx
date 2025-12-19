@@ -27,6 +27,7 @@ const StickyProductBar = ({
 }: StickyProductBarProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [openColorDropdown, setOpenColorDropdown] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const lastScrollY = useRef(0);
   const colorDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -125,12 +126,25 @@ const StickyProductBar = ({
           )}
 
           {/* 右侧：添加到购物车按钮 */}
-          <button
-            onClick={onAddToCart}
-            className="bg-white text-black font-bold px-6 py-2 rounded whitespace-nowrap hover:bg-gray-100 transition"
-          >
-            ADD TO CART
-          </button>
+          <div className="flex flex-col items-end">
+            <button
+              onClick={() => {
+                onAddToCart();
+                setShowSuccess(true);
+                setTimeout(() => {
+                  setShowSuccess(false);
+                }, 3000);
+              }}
+              className="bg-white text-black font-bold px-6 py-2 rounded whitespace-nowrap hover:bg-gray-100 transition"
+            >
+              ADD TO CART
+            </button>
+            {showSuccess && (
+              <p className="text-green-400 text-xs mt-1 animate-fade-in whitespace-nowrap">
+                Added to cart successfully!
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>

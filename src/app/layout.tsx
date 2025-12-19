@@ -16,6 +16,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Gamelab - Retro Gaming Reimagined",
   description: "15,000+ classic games in one powerful console. Express your style with Gamelab's range of vibrant colours!",
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 export default function RootLayout({

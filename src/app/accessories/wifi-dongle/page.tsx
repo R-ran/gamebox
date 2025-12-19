@@ -19,6 +19,9 @@ const WifiDonglePage = () => {
 
   const discountPercent = Math.round(((original - price) / original) * 100);
 
+  /* -------- 添加成功提示 -------- */
+  const [showAddToCartSuccess, setShowAddToCartSuccess] = useState(false);
+
   const handleStickyAddToCart = () => {
     addItem({
       id: 'wifi-dongle-pack',
@@ -38,7 +41,7 @@ const WifiDonglePage = () => {
         discountPercent={discountPercent}
         onAddToCart={handleStickyAddToCart}
       />
-      <main style={{ paddingBottom: '150px' }}>
+      <main style={{ paddingBottom: '180px' }}>
         <section className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 gap-12">
             {/* 左侧：产品图片 */}
@@ -118,25 +121,36 @@ const WifiDonglePage = () => {
                   </div>
                 </div>
               </div>
-              <button 
-                onClick={() => {
-                  const itemId = 'wifi-dongle-pack';
-                  addItem({
-                    id: itemId,
-                    name: 'Wifi Dongle Pack',
-                    price: price,
-                    image: images[activeIdx],
-                  });
-                }}
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-bold text-lg transition"
-              >
-                ADD TO CART
-              </button>
+              <div>
+                <button 
+                  onClick={() => {
+                    const itemId = 'wifi-dongle-pack';
+                    addItem({
+                      id: itemId,
+                      name: 'Wifi Dongle Pack',
+                      price: price,
+                      image: images[activeIdx],
+                    });
+                    setShowAddToCartSuccess(true);
+                    setTimeout(() => {
+                      setShowAddToCartSuccess(false);
+                    }, 3000);
+                  }}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-bold text-lg transition"
+                >
+                  ADD TO CART
+                </button>
+                {showAddToCartSuccess && (
+                  <p className="text-green-400 text-sm mt-2 text-center animate-fade-in">
+                    Added to cart successfully!
+                  </p>
+                )}
+              </div>
             </div>
           </div>
         </section>
       </main>
-      <Footer />
+      <Footer hasStickyBar={true} />
     </div>
   );
 };

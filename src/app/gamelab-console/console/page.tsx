@@ -45,6 +45,7 @@ const ConsolePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedRatingFilter, setSelectedRatingFilter] = useState<number | null>(null);
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [showAddToCartSuccess, setShowAddToCartSuccess] = useState(false);
   const [reviewFormData, setReviewFormData] = useState({
     rating: 0,
     title: '',
@@ -316,6 +317,10 @@ const ConsolePage = () => {
         productType: 'console',
       });
     }
+    setShowAddToCartSuccess(true);
+    setTimeout(() => {
+      setShowAddToCartSuccess(false);
+    }, 3000);
   };
 
   // 当颜色改变时，更新对应索引的颜色
@@ -407,7 +412,7 @@ const ConsolePage = () => {
         onColorChange={handleStickyColorChange}
         onAddToCart={handleStickyAddToCart}
       />
-      <main style={{ paddingBottom: '150px' }}>
+      <main style={{ paddingBottom: '180px' }}>
         {/* 产品主区域 */}
         <section className="container mx-auto px-4 py-12">
           <div className="grid md:grid-cols-2 gap-12">
@@ -774,12 +779,19 @@ const ConsolePage = () => {
               </div>
 
               {/* 添加到购物车按钮 */}
-              <button 
-                onClick={handleAddToCart}
-                className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-4 px-8 rounded-lg transition transform hover:scale-105 shadow-lg shadow-purple-500/50 mb-6"
-              >
-                ADD TO CART
-              </button>
+              <div className="mb-6">
+                <button 
+                  onClick={handleAddToCart}
+                  className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-4 px-8 rounded-lg transition transform hover:scale-105 shadow-lg shadow-purple-500/50"
+                >
+                  ADD TO CART
+                </button>
+                {showAddToCartSuccess && (
+                  <p className="text-green-400 text-sm mt-2 text-center animate-fade-in">
+                    Added to cart successfully!
+                  </p>
+                )}
+              </div>
 
               {/* 可折叠的信息部分 */}
               <div className="space-y-0">
@@ -1106,9 +1118,7 @@ const ConsolePage = () => {
 
         {/* Section 5: Built Like the Games That Made You. */}
         <section className="container mx-auto px-4 py-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
-            Built Like the Games That Made You.
-          </h2>
+          
           
           <div className="grid md:grid-cols-2 gap-12 items-center">
             {/* 左侧：技术规格 */}
@@ -1696,7 +1706,7 @@ const ConsolePage = () => {
             </div>
         )}
       </main>
-      <Footer />
+      <Footer hasStickyBar={true} />
     </div>
   );
 };

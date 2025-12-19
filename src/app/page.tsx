@@ -7,7 +7,7 @@ import ReviewsSection from '../components/reviews-section';
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-black">
+    <div className="bg-black">
       <Header />
       <main>
         <HeroSection />

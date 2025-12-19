@@ -65,6 +65,22 @@ html {
   scroll-behavior: smooth;
 }
 
+/* 淡入动画 */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
 /* 购物车侧边栏强制宽度 */
 .cart-sidebar {
   width: 33.333vw !important;

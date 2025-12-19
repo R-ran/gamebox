@@ -2,6 +2,7 @@
 
 import { FaShoppingCart, FaChevronDown, FaChevronUp, FaBars, FaTimes } from 'react-icons/fa';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import { useCart } from '../contexts/CartContext';
 
@@ -123,11 +124,20 @@ const Header = () => {
       </div>
 
       {/* 主导航栏 */}
-  <div className="container mx-auto px-4 py-4 space-y-4">
+  <div className="container mx-auto px-4 py-4 space-y-0">
   {/* 第一行：仅 Logo，居中 */}
   <div className="flex justify-center">
-    <Link href="/" className="text-4xl md:text-6xl font-bold tracking-wide py-4 md:py-6">
-      GAMELAB
+  {/* <Link href="/" className="text-4xl md:text-6xl font-bold tracking-wide py-4 md:py-6">
+  GAMELAB */}
+    <Link href="/" className="pt-4 md:pt-3 pb-1 md:pb-1">
+      <Image 
+        src="/logo.png" 
+        alt="PortableGame STORE.COM" 
+        width={200} 
+        height={50} 
+        className="h-auto w-auto max-w-[150px] md:max-w-[200px]"
+        priority
+      />
     </Link>
   </div>
 

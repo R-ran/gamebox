@@ -28,6 +28,9 @@ const CasePage = () => {
   const toggleFaq = (key: string) =>
     setOpenFaq((o) => ({ ...o, [key]: !o[key] }));
 
+  /* -------- 提示 -------- */
+  const [showAddToCartSuccess, setShowAddToCartSuccess] = useState(false);
+
   /* -------- 星级展示 -------- */
   const renderStars = () => (
     <div className="flex items-center gap-1">
@@ -246,7 +249,7 @@ const CasePage = () => {
         discountPercent={discountPercent}
         onAddToCart={handleStickyAddToCart}
       />
-      <main className="container mx-auto px-4 py-12" style={{ paddingBottom: '150px' }}>
+      <main className="container mx-auto px-4 py-12" style={{ paddingBottom: '180px' }}>
         <div className="grid md:grid-cols-2 gap-12">
           {/* ---------- 左侧图片 ---------- */}
           <div className="md:sticky md:top-24 self-start">
@@ -330,23 +333,34 @@ const CasePage = () => {
             </div>
 
             {/* 加入购物车 */}
-            <button
-              onClick={() => {
-                const itemId = 'gamelab-protective-case';
-                // 添加指定数量的商品
-                for (let i = 0; i < qty; i++) {
-                  addItem({
-                    id: itemId,
-                    name: 'GameLab Protective Case',
-                    price: unitPrice,
-                    image: images[activeIdx],
-                  });
-                }
-              }}
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-bold text-lg transition"
-            >
-              ADD TO CART
-            </button>
+            <div>
+              <button
+                onClick={() => {
+                  const itemId = 'gamelab-protective-case';
+                  // 添加指定数量的商品
+                  for (let i = 0; i < qty; i++) {
+                    addItem({
+                      id: itemId,
+                      name: 'GameLab Protective Case',
+                      price: unitPrice,
+                      image: images[activeIdx],
+                    });
+                  }
+                  setShowAddToCartSuccess(true);
+                  setTimeout(() => {
+                    setShowAddToCartSuccess(false);
+                  }, 3000);
+                }}
+                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-3 rounded-lg font-bold text-lg transition"
+              >
+                ADD TO CART
+              </button>
+              {showAddToCartSuccess && (
+                <p className="text-green-400 text-sm mt-2 text-center animate-fade-in">
+                  Added to cart successfully!
+                </p>
+              )}
+            </div>
 
             <div className="space-y-0 border-b border-gray-700">
               {/* Shipping Information */}
@@ -831,7 +845,7 @@ const CasePage = () => {
         
       </main>
 
-      <Footer />
+      <Footer hasStickyBar={true} />
     </div>
   );
 };
