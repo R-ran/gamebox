@@ -356,11 +356,15 @@ export async function sendOrderConfirmationEmail(data: OrderEmailData): Promise<
       return false;
     }
 
-    const recipientEmail = process.env.ORDER_NOTIFICATION_EMAIL || '1131811130@qq.com';
+    // 发送给客户
+    const customerEmail = data.customer.email;
+    // 同时抄送给管理员（可选）
+    const adminEmail = process.env.ORDER_NOTIFICATION_EMAIL || '1131811130@qq.com';
 
     const mailOptions = {
       from: `"Gamelab Shop" <${process.env.EMAIL_USER || '1131811130@qq.com'}>`,
-      to: recipientEmail,
+      to: customerEmail,
+      cc: adminEmail, // 抄送给管理员
       subject: `New Order Confirmation - ${data.orderNumber}`,
       html: generateOrderEmailHTML(data),
       text: `
@@ -390,13 +394,14 @@ Total: £${data.total.toFixed(2)}
     console.log('📧 Sending order confirmation email...');
     console.log('- Payment Method:', data.paymentMethod.toUpperCase());
     console.log('- Order Number:', data.orderNumber);
-    console.log('- Customer Email:', data.customer.email);
-    console.log('- Recipient Email:', recipientEmail);
+    console.log('- Customer Email:', customerEmail);
+    console.log('- Admin Email (CC):', adminEmail);
     
     const info = await transporter.sendMail(mailOptions);
     console.log('✅ Order confirmation email sent successfully!');
     console.log('- Message ID:', info.messageId);
-    console.log('- To:', recipientEmail);
+    console.log('- To (Customer):', customerEmail);
+    console.log('- CC (Admin):', adminEmail);
     console.log('- Subject:', mailOptions.subject);
     console.log('- Payment Method:', data.paymentMethod.toUpperCase());
     return true;

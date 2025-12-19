@@ -96,7 +96,7 @@ const CheckoutPage = () => {
       }
 
       const script = document.createElement('script');
-      script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb'}&currency=GBP`;
+      script.src = `https://www.paypal.com/sdk/js?client-id=${process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || 'sb'}&currency=GBP&locale=en_US`;
       script.async = true;
       script.onload = () => setPaypalLoaded(true);
       script.onerror = () => {
