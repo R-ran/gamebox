@@ -931,42 +931,6 @@ const HorizonPage = () => {
           </div>
         </section>
 
-        {/* Section 2: Recognise These? You're One of Us. */}
-        <section className="container mx-auto px-4 py-16 relative overflow-hidden">
-          {/* 背景游戏图像拼贴占位符 */}
-          <div className="absolute inset-0 opacity-20">
-            <div className="grid grid-cols-3 gap-4 p-8">
-              {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="bg-gray-800 rounded-lg aspect-square flex items-center justify-center blur-sm">
-                  <div className="text-gray-600 text-xs">游戏图像 {i}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-          
-          <div className="relative z-10 text-center">
-            <h2 className="text-3xl md:text-5xl font-bold mb-4">
-              Recognise These? You're One of Us.
-            </h2>
-            <div className="flex justify-center gap-4 mt-8">
-              <div className="bg-gray-900/80 rounded-lg p-4 border border-gray-700">
-                <div className="w-24 h-24 bg-gray-800 rounded mb-2 flex items-center justify-center">
-                  <span className="text-gray-500 text-xs">Mario</span>
-                </div>
-              </div>
-              <div className="bg-gray-900/80 rounded-lg p-4 border border-gray-700">
-                <div className="w-24 h-24 bg-gray-800 rounded mb-2 flex items-center justify-center">
-                  <span className="text-gray-500 text-xs">Pokémon</span>
-                </div>
-              </div>
-              <div className="bg-gray-900/80 rounded-lg p-4 border border-gray-700">
-                <div className="w-24 h-24 bg-gray-800 rounded mb-2 flex items-center justify-center">
-                  <span className="text-gray-500 text-xs">N64</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
 
         {/* Section 3: Relive the Classics. Anywhere. Anytime. */}
         <section className="container mx-auto px-4 py-16">
@@ -1007,26 +971,7 @@ const HorizonPage = () => {
           </div>
         </section>
 
-        {/* Section 4: ONE DEVICE. EVERY GENERATION YOU LOVED! */}
-        <section className="container mx-auto px-4 py-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-8 text-center">
-            ONE DEVICE. EVERY GENERATION YOU LOVED!
-          </h2>
-          {/* 游戏截图横向条带 */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-gray-900 rounded-lg overflow-hidden aspect-video border border-gray-700">
-                <div className="w-full h-full bg-gray-800 flex items-center justify-center">
-                  <div className="text-gray-500 text-xs text-center">
-                    <p>经典游戏</p>
-                    <p>截图 {i}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
+        
         {/* Section 5: Built Like the Games That Made You. */}
         <section className="container mx-auto px-4 py-16">
           
