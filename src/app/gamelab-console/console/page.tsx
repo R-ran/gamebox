@@ -828,13 +828,7 @@ const ConsolePage = () => {
                       <span className="font-semibold">Tekken 3</span>,{' '}
                       <span className="font-semibold">Bomberman</span>, plus cosy farming sims
                       and heaps of arcade hits.{' '}
-                      <button
-                        type="button"
-                        className="text-purple-400 hover:text-purple-300 underline font-semibold cursor-pointer"
-                      >
-                        View the full list of games
-                      </button>
-                      .
+                      <span className=" font-semibold">View the full list of games</span>.
                     </p>
                   </div>
                 )}

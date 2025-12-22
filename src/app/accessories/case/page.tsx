@@ -7,6 +7,7 @@ import Footer from '../../../components/footer';
 import StickyProductBar from '../../../components/sticky-product-bar';
 import { FaStar, FaChevronUp, FaChevronDown, FaDesktop, FaBatteryFull, FaSave, FaCog, FaMicrochip, FaMemory } from 'react-icons/fa';
 import { useCart } from '../../../contexts/CartContext';
+import Link from 'next/link';
 
 const CasePage = () => {
   const { addItem } = useCart();
@@ -498,13 +499,14 @@ const CasePage = () => {
                       </li>
                     </ul>
                     <p className="text-gray-300 pt-4">
-                      Looking for a specific game? Use our{' '}
+                      Looking for a specific game? Use our{' '}<Link href="/resources/game-search">
                       <button
                         type="button"
                         className="text-purple-400 hover:text-purple-300 underline font-semibold cursor-pointer"
                       >
                         Game Search Tool
                       </button>
+                      </Link>
                       {' '}to check if your favourites are included!
                     </p>
                   </div>

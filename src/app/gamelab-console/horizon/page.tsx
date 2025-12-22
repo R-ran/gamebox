@@ -1,6 +1,7 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import Header from '../../../components/header';
 import Footer from '../../../components/footer';
@@ -864,7 +865,7 @@ const HorizonPage = () => {
                         <p className="mb-2 text-gray-300">🎮 <strong>Sony</strong> – PlayStation and PSP</p>
                       </div>
                       <p className="mt-4 text-gray-300">
-                        Looking for a specific game? Use our <strong className="text-pink-400">Game Search Tool</strong> to check if your favourites are included!
+                        Looking for a specific game? Use our <Link href="/resources/game-search"><strong className="text-pink-400 hover:text-pink-300 transition-colors">Game Search Tool</strong></Link> to check if your favourites are included!
                       </p>
                     </div>
                   )}
